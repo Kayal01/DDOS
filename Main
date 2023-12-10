@@ -1,0 +1,74 @@
+import pandas as pd
+from sklearn.ensemble import ExtraTreesClassifier,RandomForestClassifier
+from sklearn.feature_selection import SelectFromModel
+from sklearn.model_selection import train_test_split
+from sklearn.metrics import confusion_matrix
+
+
+
+
+
+
+ddosData = pd.read_csv("Wednesday-workingHours.pcap_ISCX.csv")
+print(ddosData.columns)
+benign = ddosData[0:440032]
+labels = benign["Label"].values
+benign = ddosData[0:440032].drop(["Label"], axis=1)
+dosGoldenEye = ddosData[440032:450325].drop(["Label"], axis=1)
+dosHulk = ddosData[450325:681398].drop(["Label"], axis=1)
+dosSlowhttptest = ddosData[681398:686897].drop(["Label"], axis=1)
+dosslowloris = ddosData[686897:692693].drop(["Label"], axis=1)
+heartbleed = ddosData[692693::].drop(["Label"], axis=1)
+
+print("The shape of the Benign dataset is: %s samples, %s features"%(benign.shape[0], benign.shape[1]))
+print("The shape of the DosGolden Eye dataset is: %s samples, %s features"%(dosGoldenEye.shape[0], dosGoldenEye.shape[1]))
+print("The shape of the Dos Hulk dataset is: %s samples, %s features"%(dosHulk.shape[0], dosHulk.shape[1]))
+print("The shape of the DosSlowhttptest dataset is: %s samples, %s features"%(dosSlowhttptest.shape[0], dosSlowhttptest.shape[1]))
+print("The shape of the Dosslowloris dataset is: %s samples, %s features"%(dosslowloris.shape[0], dosslowloris.shape[1]))
+print("The shape of the Heartbleed dataset is: %s samples, %s features"%(heartbleed.shape[0], heartbleed.shape[1]))
+
+print(dosGoldenEye.columns)
+
+#print(dosGoldenEye.head(5))
+#print(dosGoldenEye.columns)
+# Create an imputer
+imputer = SimpleImputer(strategy='mean')  # You can choose 'mean', 'median', 'most_frequent', etc.
+
+# Fit the imputer on your data and transform it to fill missing values
+data_in_imputed = imputer.fit_transform(data_in)
+
+# Now, you can use data_in_imputed to train your ExtraTreesClassifier
+extratrees = ExtraTreesClassifier().fit(data_in_imputed, labels)
+
+data_in = benign.values
+
+#labels = benign["Label"].values
+
+
+extratrees = ExtraTreesClassifier().fit(data_in,labels)
+
+select = SelectFromModel(extratrees,prefit=True)
+
+data_in_new = select.transform(data_in)
+
+print(data_in_new.columns)
+
+notDDoS_train,notDDoS_test,DDoS_train,DDos_test = train_test_split(data_in_new,labels,test_size=0.2)
+
+classif=RandomForestClassifier(n_estimators=50)
+
+classif.fit(notDDoS_train,DDoS_train)
+
+print("score is:",classif.score(notDDoS_test,DDos_test)*100)
+
+result = classif.predict(notDDoS_test)
+
+conf_mat = confusion_matrix(DDos_test,result)
+
+#print(conf_mat.shape)
+
+#print(conf_mat)
+
+print("False positives results are: ",conf_mat[0][1]/sum(conf_mat[0])*100)
+print("False negative results are: ",conf_mat[1][0]/sum(conf_mat[1])*100)
+
