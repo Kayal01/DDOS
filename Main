@@ -20,14 +20,14 @@ dosSlowhttptest = ddosData[681398:686897].drop(["Label"], axis=1)
 dosslowloris = ddosData[686897:692693].drop(["Label"], axis=1)
 heartbleed = ddosData[692693::].drop(["Label"], axis=1)
 
-print("The shape of the Benign dataset is: %s samples, %s features"%(benign.shape[0], benign.shape[1]))
-print("The shape of the DosGolden Eye dataset is: %s samples, %s features"%(dosGoldenEye.shape[0], dosGoldenEye.shape[1]))
-print("The shape of the Dos Hulk dataset is: %s samples, %s features"%(dosHulk.shape[0], dosHulk.shape[1]))
-print("The shape of the DosSlowhttptest dataset is: %s samples, %s features"%(dosSlowhttptest.shape[0], dosSlowhttptest.shape[1]))
-print("The shape of the Dosslowloris dataset is: %s samples, %s features"%(dosslowloris.shape[0], dosslowloris.shape[1]))
-print("The shape of the Heartbleed dataset is: %s samples, %s features"%(heartbleed.shape[0], heartbleed.shape[1]))
+#print("The shape of the Benign dataset is: %s samples, %s features"%(benign.shape[0], benign.shape[1]))
+#print("The shape of the DosGolden Eye dataset is: %s samples, %s features"%(dosGoldenEye.shape[0], dosGoldenEye.shape[1]))
+#print("The shape of the Dos Hulk dataset is: %s samples, %s features"%(dosHulk.shape[0], dosHulk.shape[1]))
+#print("The shape of the DosSlowhttptest dataset is: %s samples, %s features"%(dosSlowhttptest.shape[0], dosSlowhttptest.shape[1]))
+#print("The shape of the Dosslowloris dataset is: %s samples, %s features"%(dosslowloris.shape[0], dosslowloris.shape[1]))
+#print("The shape of the Heartbleed dataset is: %s samples, %s features"%(heartbleed.shape[0], heartbleed.shape[1]))
 
-print(dosGoldenEye.columns)
+#print(dosGoldenEye.columns)
 
 #print(dosGoldenEye.head(5))
 #print(dosGoldenEye.columns)
@@ -51,7 +51,7 @@ select = SelectFromModel(extratrees,prefit=True)
 
 data_in_new = select.transform(data_in)
 
-print(data_in_new.columns)
+#print(data_in_new.columns)
 
 notDDoS_train,notDDoS_test,DDoS_train,DDos_test = train_test_split(data_in_new,labels,test_size=0.2)
 
